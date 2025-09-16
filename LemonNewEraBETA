@@ -1,7 +1,7 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/Library.lua"))()
 
 local Window = Library:CreateWindow({
-    Title = "My Script",
+    Title = "LemonHubNewEra|beta🤞😔",
     Footer = "v1.0.0",
     ToggleKeybind = Enum.KeyCode.RightControl,
     Center = true,
@@ -12,8 +12,8 @@ local MainTab = Window:AddTab("Main", "home", "Main features")
 -- Second parameter is the optional icon name from lucide.dev, third is an optional description
 
 local UISettingsTab = Window:AddTab({
-    Name = "UI Settings",
-    Description = "Customize the UI",
+    Name = "breaking point",
+    Description = "breaking point BEST scripts",
     Icon = "settings"
 })
 
@@ -21,8 +21,9 @@ local LeftGroupbox = UISettingsTab:AddLeftGroupbox("Settings", "wrench")
 local RightGroupbox = UISettingsTab:AddRightGroupbox("Information", "info")
 
 local MyButton = LeftGroupbox:AddButton({
-    Text = "Tiger Admin",
+    Text = "H4RN7 best",
     Func = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/H4R7NHacks/Obfuscated/master/Breaking%20Point%20H4R7N%20Hack.lua"))()
         print("Running")
     end
 })
