@@ -1,7 +1,7 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/Library.lua"))()
 
 local Window = Library:CreateWindow({
-    Title = "LemonHubBETA 🤞😔",
+    Title = "My Script",
     Footer = "v1.0.0",
     ToggleKeybind = Enum.KeyCode.RightControl,
     Center = true,
@@ -12,16 +12,17 @@ local MainTab = Window:AddTab("Main", "home", "Main features")
 -- Second parameter is the optional icon name from lucide.dev, third is an optional description
 
 local UISettingsTab = Window:AddTab({
-    Name = "Prison life",
-    Description = "Prison Life scripts",
-    Icon = "main"
+    Name = "UI Settings",
+    Description = "Customize the UI",
+    Icon = "settings"
 })
 
-local Button = Groupbox:AddButton({
-    Text = "Tiger admin Best",
+local LeftGroupbox = UISettingsTab:AddLeftGroupbox("Settings", "wrench")
+local RightGroupbox = UISettingsTab:AddRightGroupbox("Information", "info")
+
+local MyButton = LeftGroupbox:AddButton({
+    Text = "Tiger Admin",
     Func = function()
-        print("executed")
-    end,
-    DoubleClick = false -- Requires double-click for risky actions
+        print("Running")
+    end
 })
-
