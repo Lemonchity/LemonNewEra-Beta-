@@ -12,6 +12,30 @@ local MainTab = Window:AddTab("Main", "home", "Main features")
 -- Second parameter is the optional icon name from lucide.dev, third is an optional description
 
 local UISettingsTab = Window:AddTab({
+    Name = "blox fruits the bests",
+    Description = "blox fruitsVerified✅scripts",
+    Icon = "settings"
+})
+
+
+local LeftGroupbox = UISettingsTab:AddLeftGroupbox("Settings", "wrench")
+local RightGroupbox = UISettingsTab:AddRightGroupbox("Information", "info")
+
+local MyButton = LeftGroupbox:AddButton({
+    Text = "RedZ hub✅",
+    Func = function()
+local Settings = {
+  JoinTeam = "Pirates"; -- Pirates/Marines
+  Translator = true; -- true/false
+}
+
+getgenv().BETA_VERSION = true
+loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau"))(Settings)
+        print("Action running!")
+    end
+})
+
+local UISettingsTab = Window:AddTab({
     Name = "breaking point",
     Description = "breaking point BEST scripts",
     Icon = "settings"
