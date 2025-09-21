@@ -31,13 +31,47 @@ local Settings = {
 
 getgenv().BETA_VERSION = true
 loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau"))(Settings)
+        print("running")
+    end
+})
+
+local UISettingsTab = Window:AddTab({
+    Name = "Prison life",
+    Description = "prison life BEST scripts",
+    Icon = "settings"
+})
+
+local LeftGroupbox = UISettingsTab:AddLeftGroupbox("Settings", "wrench")
+local RightGroupbox = UISettingsTab:AddRightGroupbox("Information", "info")
+
+local MyButton = LeftGroupbox:AddButton({
+    Text = "tiger admin",
+    Func = function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-Tiger-Admin-40262"))()
         print("Action running!")
     end
 })
 
 local UISettingsTab = Window:AddTab({
+    Name = "Fling things ans people",
+    Description = "FTAP BEST scripts",
+    Icon = "settings"
+})
+
+local LeftGroupbox = UISettingsTab:AddLeftGroupbox("Settings", "wrench")
+local RightGroupbox = UISettingsTab:AddRightGroupbox("Information", "info")
+
+local MyButton = LeftGroupbox:AddButton({
+    Text = "Ruhub",
+    Func = function()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Fling-Things-and-People-RuHUB-OP-FTAP-SCRIPT-UPDATED-39324"))()
+        print("running")
+    end
+})
+
+local UISettingsTab = Window:AddTab({
     Name = "breaking point",
-    Description = "breaking point BEST scripts",
+    Description = "Breaking point BEST scripts",
     Icon = "settings"
 })
 
@@ -49,5 +83,48 @@ local MyButton = LeftGroupbox:AddButton({
     Func = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/H4R7NHacks/Obfuscated/master/Breaking%20Point%20H4R7N%20Hack.lua"))()
         print("Running")
+    end
+})
+
+local UISettingsTab = Window:AddTab({
+    Name = "99 night in the forest",
+    Description = "99 night in the forest Best scripts",
+    Icon = "settings"
+})
+
+local LeftGroupbox = UISettingsTab:AddLeftGroupbox("Settings", "wrench")
+local RightGroupbox = UISettingsTab:AddRightGroupbox("Information", "info")
+
+local MyButton = LeftGroupbox:AddButton({
+    Text = "VoidWare The best",
+    Func = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/nightsintheforest.lua", true))()
+        print("running")
+    end
+})
+
+local UISettingsTab = Window:AddTab({
+    Name = "Steal a brainrot",
+    Description = "Steal a brainrot BEST scripts",
+    Icon = "settings"
+})
+
+local LeftGroupbox = UISettingsTab:AddLeftGroupbox("Settings", "wrench")
+local RightGroupbox = UISettingsTab:AddRightGroupbox("Information", "info")
+
+local MyButton = LeftGroupbox:AddButton({
+    Text = "Koronis",
+    Func = function()
+-- https://koronis.xyz
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nf-36/Koronis/refs/heads/main/Scripts/hub.lua"))()
+        print("running")
+    end
+})
+
+local MyButton = RightGroupbox:AddButton({
+    Text = "Chilli hub keyless",
+    Func = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()
+        print("running")
     end
 })
