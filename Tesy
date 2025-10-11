@@ -1,11 +1,11 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Rayfield Example Window",
+   Name = "LemonHubOffical|still working",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Rayfield Interface Suite",
    LoadingSubtitle = "by Sirius",
-   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
+   ShowText = "LemonHub", -- for mobile users to unhide rayfield, change if you'd like
    Theme = "Serenity", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
@@ -16,7 +16,7 @@ local Window = Rayfield:CreateWindow({
    ConfigurationSaving = {
       Enabled = true,
       FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "Big Hub"
+      FileName = "LemonHub"
    },
 
    Discord = {
@@ -40,7 +40,66 @@ local Window = Rayfield:CreateWindow({
 local Tab = Window:CreateTab("Tab Example", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
-   Name = "Button Example",
+   Name = "ESP",
    Callback = function()
+
+
+-- ESP для Roblox (локальный скрипт)
+-- Подсвечивает всех игроков, кроме своего
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Функция создания ESP поверх игрока
+
+local function createESP(player)
+    if player == LocalPlayer then return end
+    local highlight = Instance.new("Highlight")
+    highlight.Adornee = player.Character
+    highlight.FillColor = Color3.fromRGB(255, 0, 0)        -- Цвет подсветки (красный)
+    highlight.OutlineColor = Color3.fromRGB(255, 255, 255) -- Обводка белая
+    highlight.FillTransparency = 0.5
+    highlight.Parent = player.Character
+    return highlight
+end
+
+-- Следим за игроками и добавляем ESP
+
+local highlights = {}
+
+local function onCharacterAdded(character)
+    local player = Players:GetPlayerFromCharacter(character)
+    if player and not highlights[player] then
+        highlights[player] = createESP(player)
+    end
+end
+
+local function onPlayerAdded(player)
+    if player.Character then
+        onCharacterAdded(player.Character)
+    end
+    player.CharacterAdded:Connect(onCharacterAdded)
+end
+
+Players.PlayerAdded:Connect(onPlayerAdded)
+
+for _, player in pairs(Players:GetPlayers()) do
+    if player ~= LocalPlayer then
+        if player.Character then
+            highlights[player] = createESP(player)
+        end
+        player.CharacterAdded:Connect(onCharacterAdded)
+    end
+end
+
+-- Опционально очистка, если кто-то уходит
+
+Players.PlayerRemoving:Connect(function(player)
+    if highlights[player] then
+        highlights[player]:Destroy()
+        highlights[player] = nil
+    end
+end)
    end,
 })
