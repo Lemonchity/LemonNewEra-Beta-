@@ -37,7 +37,7 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local Tab = Window:CreateTab("Tab Example", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Main", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "ESP",
@@ -57,8 +57,8 @@ local function createESP(player)
     if player == LocalPlayer then return end
     local highlight = Instance.new("Highlight")
     highlight.Adornee = player.Character
-    highlight.FillColor = Color3.fromRGB(255, 0, 0)        -- Цвет подсветки (красный)
-    highlight.OutlineColor = Color3.fromRGB(255, 255, 255) -- Обводка белая
+    highlight.FillColor = Color3.fromRGB(0, 0, 200)        -- Цвет подсветки (красный)
+    highlight.OutlineColor = Color3.fromRGB(0, 200, 0) -- Обводка белая
     highlight.FillTransparency = 0.5
     highlight.Parent = player.Character
     return highlight
