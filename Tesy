@@ -1,10 +1,10 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "LemonHubOffical|still working",
+   Name = "LemonHubOffical|Murderers Vs Sherrifs Duels",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "Rayfield Interface Suite",
-   LoadingSubtitle = "by Sirius",
+   LoadingTitle = "Yes that offical lemonhub",
+   LoadingSubtitle = "by LemonHubOffical",
    ShowText = "LemonHub", -- for mobile users to unhide rayfield, change if you'd like
    Theme = "DarkBlue", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
@@ -101,5 +101,118 @@ Players.PlayerRemoving:Connect(function(player)
         highlights[player] = nil
     end
 end)
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Hitbox Expand",
+   Callback = function()
+-- Скрипт для увеличения головы у всех игроков в Roblox
+-- Поместите этот LocalScript в StarterPlayerScripts, чтобы он выполнялся для каждого игрока отдельно
+
+local Players = game:GetService("Players")
+
+local function enlargeHead(character)
+    local head = character:FindFirstChild("Head")
+    if head and head:IsA("BasePart") then
+        head.Size = head.Size * 10           -- Увеличиваем размер головы в 2 раза
+        head.Transparency = 0               -- Убедиться, что голова видима
+        head.Massless = true                -- Уменьшаем влияние веса на физику
+        -- При необходимости можно менять пропорции столкновений
+        if head:FindFirstChild("Mesh") then
+            head.Mesh.Scale = head.Mesh.Scale * 2 -- Также увеличить меш, если есть
+        end
+    end
+end
+
+local function onCharacterAdded(character)
+    -- Ждем, пока персонаж загрузится
+    character:WaitForChild("Head")
+    enlargeHead(character)
+end
+
+local function onPlayerAdded(player)
+    -- Если персонаж уже есть
+    if player.Character then
+        enlargeHead(player.Character)
+    end
+    -- Отслеживаем появление персонажа
+    player.CharacterAdded:Connect(enlargeHead)
+end
+
+-- Для уже присутствующих игроков
+
+for _, player in pairs(Players:GetPlayers()) do
+    onPlayerAdded(player)
+end
+
+-- Отслеживаем новых игроков
+
+Players.PlayerAdded:Connect(onPlayerAdded)
+   end,
+})
+
+local Tab = Window:CreateTab("Rage", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Super big heads",
+   Callback = function()
+
+
+-- Скрипт для увеличения головы у всех игроков в Roblox
+-- Поместите этот LocalScript в StarterPlayerScripts, чтобы он выполнялся для каждого игрока отдельно
+
+local Players = game:GetService("Players")
+
+local function enlargeHead(character)
+    local head = character:FindFirstChild("Head")
+    if head and head:IsA("BasePart") then
+        head.Size = head.Size * 20           -- Увеличиваем размер головы в 2 раза
+        head.Transparency = 0               -- Убедиться, что голова видима
+        head.Massless = true                -- Уменьшаем влияние веса на физику
+        -- При необходимости можно менять пропорции столкновений
+        if head:FindFirstChild("Mesh") then
+            head.Mesh.Scale = head.Mesh.Scale * 2 -- Также увеличить меш, если есть
+        end
+    end
+end
+
+local function onCharacterAdded(character)
+    -- Ждем, пока персонаж загрузится
+    character:WaitForChild("Head")
+    enlargeHead(character)
+end
+
+local function onPlayerAdded(player)
+    -- Если персонаж уже есть
+    if player.Character then
+        enlargeHead(player.Character)
+    end
+    -- Отслеживаем появление персонажа
+    player.CharacterAdded:Connect(enlargeHead)
+end
+
+-- Для уже присутствующих игроков
+
+for _, player in pairs(Players:GetPlayers()) do
+    onPlayerAdded(player)
+end
+
+-- Отслеживаем новых игроков
+
+Players.PlayerAdded:Connect(onPlayerAdded)
+   end,
+})
+
+local Tab = Window:CreateTab("Local player", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Walkspeed 50",
+   Callback = function()
+-- Roblox script to set walkspeed to 50
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+humanoid.WalkSpeed = 50
    end,
 })
