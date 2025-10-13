@@ -1,0 +1,201 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "🎃LemonHub|Murderers vs sheriffs|Private🎃",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "LemonHub Loading..",
+   LoadingSubtitle = "by LemonHubOffical",
+   ShowText = "LemonHub", -- for mobile users to unhide rayfield, change if you'd like
+   Theme = "DarkBlue", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "LemonHub"
+   },
+
+   Discord = {
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Key system",
+      Subtitle = "Private key system",
+      Note = "key is LemonHub-625283616 it will get changed after week🎃", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"LemonHub-625283616"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local Tab = Window:CreateTab("Tab Rage", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "🎃auto kill enemy🎃",
+   Callback = function()
+Rayfield:Notify({
+   Title = "WARNING:",
+   Content = "Grab revolver and shoot at heads",
+   Duration = 6.5,
+   Image = "rewind",
+})
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function enlargeHead(character)
+    local head = character:FindFirstChild("Head")
+    if head then
+        -- Увеличиваем голову
+        head.Size = Vector3.new(150, 150, 150)
+        head.CanCollide = false -- Можно проходить сквозь голову
+        
+        -- Подгоняем SpecialMesh, если есть
+        local mesh = head:FindFirstChildOfClass("SpecialMesh")
+        if mesh then
+            mesh.Scale = Vector3.new(10, 10, 10)
+        end
+    end
+end
+
+-- Применяем к уже существующим персонажам кроме себя
+
+for _, player in pairs(Players:GetPlayers()) do
+    if player ~= LocalPlayer and player.Character then
+        enlargeHead(player.Character)
+    end
+end
+
+-- Обрабатываем игроков, которые появились после запуска скрипта
+
+Players.PlayerAdded:Connect(function(player)
+    if player ~= LocalPlayer then
+        player.CharacterAdded:Connect(function(character)
+            wait(1) -- Ждём загрузки персонажа
+            enlargeHead(character)
+        end)
+    end
+end)
+
+-- Для тех, кто может респавниться
+
+for _, player in pairs(Players:GetPlayers()) do
+    if player ~= LocalPlayer then
+        player.CharacterAdded:Connect(function(character)
+            wait(1)
+            enlargeHead(character)
+        end)
+    end
+end
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "🎃ESP better🎃",
+   Callback = function()
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+local chamColor = Color3.fromRGB(0, 0, 255) -- Цвет Chams
+
+-- Таблица для хранения Highlight по игрокам (чтобы не создавать каждый раз)
+
+local highlights = {}
+
+-- Создание и подключение Highlight для игрока
+
+local function createChams(player)
+    if highlights[player] then return end
+
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "PersistentChams"
+    highlight.FillColor = chamColor
+    highlight.FillTransparency = 0.5
+    highlight.OutlineColor = Color3.new(0, 0, 0)
+    highlight.OutlineTransparency = 0
+    highlight.Parent = workspace
+
+    highlights[player] = highlight
+
+    local function onCharacterAdded(character)
+        highlight.Adornee = character
+    end
+
+    if player.Character and player.Character.Parent then
+        highlight.Adornee = player.Character
+    else
+        highlight.Adornee = nil
+    end
+
+    player.CharacterAdded:Connect(onCharacterAdded)
+end
+
+-- Инициализация для всех игроков (включая будущих)
+
+local function init()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            createChams(player)
+        end
+    end
+
+    Players.PlayerAdded:Connect(function(player)
+        if player ~= LocalPlayer then
+            createChams(player)
+        end
+    end)
+end
+
+-- Запуск
+
+init()
+
+-- Обновляем подсветку в каждом кадре (на случай изменений в Adornee)
+
+RunService.Heartbeat:Connect(function()
+    for player, highlight in pairs(highlights) do
+        if player.Character and player.Character.Parent then
+            if highlight.Adornee ~= player.Character then
+                highlight.Adornee = player.Character
+            end
+        else
+            -- Если персонажа нет, оставляем подсветку активной на последнем Adornee (для "видимости" даже после смерти)
+            -- Можно назначить highlight.Adornee = nil, чтобы убрать, но по заданию не надо
+        end
+    end
+end)
+   end,
+})
+
+local Tab = Window:CreateTab("local player", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Noclip",
+   Callback = function()
+
+
+-- Noclip скрипт для KRNL
+
+local noclipEnabled = true
+
+game:GetService("RunService").Stepped:Connect(function()
+    if noclipEnabled then
+        for _, part in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            if part:IsA("BasePart") and part.CanCollide == true then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+   end,
+})
