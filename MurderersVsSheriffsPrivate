@@ -180,7 +180,7 @@ end)
 local Tab = Window:CreateTab("local player", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
-   Name = "Noclip",
+   Name = "🎃Noclip🎃",
    Callback = function()
 
 
@@ -196,6 +196,40 @@ game:GetService("RunService").Stepped:Connect(function()
             end
         end
     end
+end)
+   end,
+})
+
+
+local Button = Tab:CreateButton({
+   Name = "🎃walkSpeed 50🎃",
+   Callback = function()
+
+
+-- Скрипт для установки скорости 50 и сохранения после смерти в Roblox через executor (например, KRNL)
+
+local player = game.Players.LocalPlayer
+
+-- Функция установки скорости
+
+local function setSpeed()
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = 50
+        end
+    end
+end
+
+-- Устанавливаем скорость сразу при запуске
+
+setSpeed()
+
+-- При респауне персонажа снова устанавливаем скорость
+
+player.CharacterAdded:Connect(function(character)
+    character:WaitForChild("Humanoid").WalkSpeed = 50
 end)
    end,
 })
