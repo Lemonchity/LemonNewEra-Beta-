@@ -1,0 +1,224 @@
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+local Window = WindUI:CreateWindow({
+    Title = "LemonHub",
+    Icon = "door-open", -- lucide icon
+    Author = "by LemonHubOffical",
+    Folder = "LemonHubOffical",
+    
+    -- ↓ This all is Optional. You can remove it.
+    Size = UDim2.fromOffset(580, 460),
+    MinSize = Vector2.new(560, 350),
+    MaxSize = Vector2.new(850, 560),
+    Transparent = true,
+    Theme = "Dark",
+    Resizable = true,
+    SideBarWidth = 200,
+    BackgroundImageTransparency = 0.42,
+    HideSearchBar = true,
+    ScrollBarEnabled = false,
+    
+    -- ↓ Optional. You can remove it.
+    --[[ You can set 'rbxassetid://' or video to Background.
+        'rbxassetid://':
+            Background = "rbxassetid://", -- rbxassetid
+        Video:
+            Background = "video:YOUR-RAW-LINK-TO-VIDEO.webm", -- video 
+    --]]
+    
+    -- ↓ Optional. You can remove it.
+    User = {
+        Enabled = true,
+        Anonymous = true,
+        Callback = function()
+            print("clicked")
+        end,
+    },
+    
+    --       remove this all, 
+    -- !  ↓  if you DON'T need the key system
+    KeySystem = { 
+        -- ↓ Optional. You can remove it.
+        Key = { "LemonHub-527382", "5678" },
+        
+        Note = "Key on link (not link just key).",
+        
+        -- ↓ Optional. You can remove it.
+        Thumbnail = {
+            Image = "rbxassetid://",
+            Title = "Thumbnail",
+        },
+        
+        -- ↓ Optional. You can remove it.
+        URL = "LemonHub-527382",
+        
+        -- ↓ Optional. You can remove it.
+        SaveKey = true, -- automatically save and load the key.
+        
+        -- ↓ Optional. You can remove it.
+        -- API = {} ← Services. Read about it below ↓
+    },
+})
+
+local Tab = Window:Tab({
+    Title = "farm",
+    Icon = "bird", -- optional
+    Locked = false,
+})
+
+
+local isToggled = false
+
+local Toggle = Tab:Toggle({
+    Title = "Autofarm clicker",
+    Desc = "Autofarming money",
+    Icon = "bird",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        isToggled = state
+        print("Toggle Activated " .. tostring(state))
+        
+        if isToggled then
+            spawn(function()
+                while isToggled do
+                    local args = {"Smartfon1"}
+                    game:GetService("ReplicatedStorage"):WaitForChild("AddMoneyRequest"):FireServer(unpack(args))
+                    wait(0.00001)  -- время между запросами, можно менять
+                end
+                print("Toggle Deactivated - stopped repeating")
+            end)
+        end
+        -- Если выключили — переменная isToggled = false, цикл автоматически завершится
+    end
+})
+
+local isToggled = false
+
+local Toggle = Tab:Toggle({
+    Title = "Autofarm clicker phone for 10K",
+    Desc = "Autofarming money on phone for 10k must have it",
+    Icon = "bird",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        isToggled = state
+        print("Toggle Activated " .. tostring(state))
+        
+        if isToggled then
+            spawn(function()
+                while isToggled do
+                    local args = {
+	"Smartfon2"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("AddMoneyRequest"):FireServer(unpack(args))
+
+                    wait(0.00001)  -- время между запросами, можно менять
+                end
+                print("Toggle Deactivated - stopped repeating")
+            end)
+        end
+        -- Если выключили — переменная isToggled = false, цикл автоматически завершится
+    end
+})
+
+local isToggled = false
+
+local Toggle = Tab:Toggle({
+    Title = "Autofarm clicker for 50k",
+    Desc = "Autofarming money, must have phone for 50k.",
+    Icon = "bird",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        isToggled = state
+        print("Toggle Activated " .. tostring(state))
+        
+        if isToggled then
+            spawn(function()
+                while isToggled do
+                   local args = {
+	"Smartfon3"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("AddMoneyRequest"):FireServer(unpack(args))
+                    wait(0.00001)  -- время между запросами, можно менять
+                end
+                print("Toggle Deactivated - stopped repeating")
+            end)
+        end
+        -- Если выключили — переменная isToggled = false, цикл автоматически завершится
+    end
+})
+
+local isToggled = false
+
+local Toggle = Tab:Toggle({
+    Title = "Autofarm clicker for 100k",
+    Desc = "Autofarming money, must have phone for 100k",
+    Icon = "bird",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        isToggled = state
+        print("Toggle Activated " .. tostring(state))
+        
+        if isToggled then
+            spawn(function()
+                while isToggled do
+                    local args = {
+	"Smartfon4"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("AddMoneyRequest"):FireServer(unpack(args))
+                    wait(0.00001)  -- время между запросами, можно менять
+                end
+                print("Toggle Deactivated - stopped repeating")
+            end)
+        end
+        -- Если выключили — переменная isToggled = false, цикл автоматически завершится
+    end
+})
+
+local Tab = Window:Tab({
+    Title = "Auto Buy",
+    Icon = "bird", -- optional
+    Locked = false,
+})
+
+local Button = Tab:Button({
+    Title = "Buy phone for 10K",
+    Desc = "Auto buying phone for 10k",
+    Locked = false,
+    Callback = function()
+local args = {
+	"VovaX2aley"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("GiveTool"):FireServer(unpack(args))
+        -- ...
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Buy phone for 50k",
+    Desc = "Auto buying phone for 50k",
+    Locked = false,
+    Callback = function()
+local args = {
+	"SlimShady5pro"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("GiveTool"):FireServer(unpack(args))
+        -- ...
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Buy phone for 100k",
+    Desc = "buys phone for 100k",
+    Locked = false,
+    Callback = function()
+local args = {
+	"Nikitos8ultra"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("GiveTool"):FireServer(unpack(args))
+        -- ...
+    end
+})
