@@ -1,1 +1,277 @@
-[script deleted]
+ local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+local Window = WindUI:CreateWindow({
+    Title = "LeminateHub",
+    Icon = "door-open", -- lucide icon. optional
+    Author = "by LemonHubOffical", -- optional
+})  
+
+local Tab = Window:Tab({
+    Title = "Legit",
+    Icon = "flame", -- optional
+    Locked = false,
+})
+
+
+local Toggle = Tab:Toggle({
+    Title = "2x size Heads",
+    Desc = "Making 2x size heads",
+    Icon = "bird",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        local Players = game:GetService("Players")
+        local localPlayer = Players.LocalPlayer
+
+        -- Таблица для хранения всех подключений
+        local connections = {}
+
+        -- Функция увеличения головы и отключения коллизии
+        local function setupBigHeadAndNoCollide(character)
+            if not character then return end
+            local head = character:FindFirstChild("Head")
+            if head then
+                head.Size = Vector3.new(15, 15, 15) -- Большая голова
+                head.Massless = true
+                head.CanCollide = false
+            end
+        end
+
+        -- Функция возвращения головы к стандартному состоянию
+        local function resetHead(character)
+            if not character then return end
+            local head = character:FindFirstChild("Head")
+            if head then
+                head.Size = Vector3.new(2, 1, 1) -- Стандартный размер головы
+                head.CanCollide = true
+            end
+        end
+
+        -- Функция для обработки персонажа другого игрока
+        local function onCharacterAdded(character, player)
+            if player ~= localPlayer then
+                setupBigHeadAndNoCollide(character)
+            end
+        end
+
+        if state then
+            -- Применяем эффект к текущим персонажам и подписываемся на новые
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player ~= localPlayer and player.Character then
+                    setupBigHeadAndNoCollide(player.Character)
+                end
+                local conn = player.CharacterAdded:Connect(function(character)
+                    onCharacterAdded(character, player)
+                end)
+                table.insert(connections, conn)
+            end
+
+            -- Подписываемся на новых игроков
+            local connAdded = Players.PlayerAdded:Connect(function(player)
+                local connChar = player.CharacterAdded:Connect(function(character)
+                    onCharacterAdded(character, player)
+                end)
+                table.insert(connections, connChar)
+            end)
+            table.insert(connections, connAdded)
+
+            print("Toggle Activated " .. tostring(state))
+        else
+            -- Отключаем все подписки
+            for _, conn in pairs(connections) do
+                conn:Disconnect()
+            end
+            connections = {}
+
+            -- Возвращаем головы игроков к обычному состоянию
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player ~= localPlayer and player.Character then
+                    resetHead(player.Character)
+                end
+            end
+
+            print("Toggle Deactivated " .. tostring(state))
+        end
+    end
+})
+
+local Tab = Window:Tab({
+    Title = "Rage(soon)",
+    Icon = "bird", -- optional
+    Locked = true,
+})
+
+local Tab = Window:Tab({
+    Title = "Visuals",
+    Icon = "eye", -- optional
+    Locked = false,
+})
+
+local Button = Tab:Button({
+    Title = "esp",
+    Desc = "esp all",
+    Locked = false,
+    Callback = function()
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+local chamColor = Color3.fromRGB(0, 255, 0) -- Цвет Chams
+
+-- Таблица для хранения Highlight по игрокам (чтобы не создавать каждый раз)
+
+local highlights = {}
+
+-- Создание и подключение Highlight для игрока
+
+local function createChams(player)
+    if highlights[player] then return end
+
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "PersistentChams"
+    highlight.FillColor = chamColor
+    highlight.FillTransparency = 0.5
+    highlight.OutlineColor = Color3.new(0, 0, 0)
+    highlight.OutlineTransparency = 0
+    highlight.Parent = workspace
+
+    highlights[player] = highlight
+
+    local function onCharacterAdded(character)
+        highlight.Adornee = character
+    end
+
+    if player.Character and player.Character.Parent then
+        highlight.Adornee = player.Character
+    else
+        highlight.Adornee = nil
+    end
+
+    player.CharacterAdded:Connect(onCharacterAdded)
+end
+
+-- Инициализация для всех игроков (включая будущих)
+
+local function init()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            createChams(player)
+        end
+    end
+
+    Players.PlayerAdded:Connect(function(player)
+        if player ~= LocalPlayer then
+            createChams(player)
+        end
+    end)
+end
+
+-- Запуск
+
+init()
+
+-- Обновляем подсветку в каждом кадре (на случай изменений в Adornee)
+
+RunService.Heartbeat:Connect(function()
+    for player, highlight in pairs(highlights) do
+        if player.Character and player.Character.Parent then
+            if highlight.Adornee ~= player.Character then
+                highlight.Adornee = player.Character
+            end
+        else
+            -- Если персонажа нет, оставляем подсветку активной на последнем Adornee (для "видимости" даже после смерти)
+            -- Можно назначить highlight.Adornee = nil, чтобы убрать, но по заданию не надо
+        end
+    end
+end)
+        -- ...
+    end
+})
+
+local Tab = Window:Tab({
+    Title = "Local player",
+    Icon = "flag", -- optional
+    Locked = false,
+})
+
+local Button = Tab:Button({
+    Title = "Speed 50",
+    Desc = "Making speed 50",
+    Locked = false,
+    Callback = function()
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+
+local function setSpeed(speed)
+    if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") then
+        localPlayer.Character.Humanoid.WalkSpeed = speed
+    end
+end
+
+-- Устанавливаем скорость 50
+
+setSpeed(50)
+        -- ...
+    end
+})
+
+local Button = Tab:Button({
+    Title = "noclip",
+    Desc = "keybind N",
+    Locked = false,
+    Callback = function()
+
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+local noclipEnabled = false
+
+local function toggleNoclip()
+    noclipEnabled = not noclipEnabled
+    if noclipEnabled then
+        print("Noclip enabled")
+    else
+        print("Noclip disabled")
+    end
+end
+
+-- Включаем/выключаем noclip по нажатию кнопки (пример: клавиша "N")
+
+local UserInputService = game:GetService("UserInputService")
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.N then
+        toggleNoclip()
+    end
+end)
+
+RunService.Stepped:Connect(function()
+    if noclipEnabled and localPlayer.Character then
+        for _, part in pairs(localPlayer.Character:GetChildren()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    elseif localPlayer.Character then
+        for _, part in pairs(localPlayer.Character:GetChildren()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = true
+            end
+        end
+    end
+end)
+        -- ...
+    end
+})
+ 
+-- lucide
+local Icon = "<lucide-icon name="eye"></lucide-icon>"
+
+-- geist
+local Icon = "geist:window"
+
+-- craft
+local Icon = "craft:macbook-stroke"
