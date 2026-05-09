@@ -1,0 +1,68 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/Library.lua"))()
+
+local repo = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+
+local Window = Library:CreateWindow({
+    Title = "mspaint",
+    Footer = "version: example",
+    Icon = 95816097006870,
+    NotifySide = "Right",
+})
+
+-- Sets the draggable label visibility
+local DraggableLabel = Library:AddDraggableLabel("Obsidian demo")
+DraggableLabel:SetVisible(true)
+ 
+-- Example of dynamically-updating draggable label with common traits (fps and ping)
+local FrameTimer = tick()
+local FrameCounter = 0;
+local FPS = 60;
+ 
+local WatermarkConnection = game:GetService('RunService').RenderStepped:Connect(function()
+    FrameCounter += 1;
+ 
+    if (tick() - FrameTimer) >= 1 then
+        FPS = FrameCounter;
+        FrameTimer = tick();
+        FrameCounter = 0;
+    end;
+ 
+    DraggableLabel:SetText(('Obsidian demo | %s fps | %s ms'):format(
+        math.floor(FPS),
+        math.floor(game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValue())
+    ));
+end);
+
+Library.ShowCustomCursor = false
+
+local Tab = Window:AddTab("Main", "skull")
+
+local Tabs = {
+	Main = Window:AddTab("Main", "user"),
+	["UI Settings"] = Window:AddTab("UI Settings", "settings"),
+}
+ 
+-- Set the library
+SaveManager:SetLibrary(Library)
+ 
+-- Don't save theme settings in configuration
+SaveManager:IgnoreThemeSettings()
+ 
+-- Manual Ignore List (will ignore all Toggles/Options with the indexes provided)
+-- Here we are ignoring the menu keybind
+SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
+ 
+-- Map out folder structure
+SaveManager:SetFolder("MyScriptHub/specific-game")
+SaveManager:SetSubFolder("Lobby") -- if the game has multiple places inside of it (for example: DOORS)
+-- you can use this to save configs for those places separately
+-- The path in this script would be: MyScriptHub/specific-game/settings/specific-place
+-- [ This is optional ]
+ 
+-- Builds our config menu on the right side of our tab
+SaveManager:BuildConfigSection(Tabs["UI Settings"])
+ 
+-- Load the autoload config
+SaveManager:LoadAutoloadConfig()
