@@ -1,0 +1,428 @@
+--[[
+ WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
+]]
+-- Taken from my GitHub: https://github.com/ImInsane-1337/neverlose-ui
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImInsane-1337/neverlose-ui/refs/heads/main/source/library.lua"))()
+local CheatName = "MyPoject"
+
+Library.Folders = {
+    Directory = CheatName,
+    Configs = CheatName .. "/Configs",
+    Assets = CheatName .. "/Assets",
+}
+
+local Accent = Color3.fromRGB(255, 80, 80)
+local Gradient = Color3.fromRGB(120, 20, 20)
+
+Library.Theme.Accent = Accent
+Library.Theme.AccentGradient = Gradient
+Library:ChangeTheme("Accent", Accent)
+Library:ChangeTheme("AccentGradient", Gradient)
+local Window = Library:Window({
+    Name = "пр нищета🤡👆",
+    SubName = "Lemoongui and ruidanya228",
+    Logo = "120959262762131"
+})
+
+local KeybindList = Library:KeybindList("Keybinds")
+Library:Watermark({
+    "буханка хлеба",
+    "by лемончек",
+    120959262762131
+})
+
+task.spawn(function()
+    while true do
+        local FPS = math.floor(1 / game:GetService("RunService").RenderStepped:Wait())
+        
+        Library:Watermark({
+            "ЭГЭЙ",
+            "by УЕБАНКА🤫🎅",
+            120959262762131,
+            "FPS: " .. FPS
+        })
+        task.wait(0.5)
+    end
+end)
+
+Window:Category("Main")
+
+local LegitPage = Window:Page({Name = "Legit", Icon = "138827881557940"})
+local MainSection = LegitPage:Section({Name = "Main Features", Side = 1})
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+-- Настройки (те самые флаги)
+local Settings = {
+    AimbotEnabled = true,
+    FovRadius = 16,
+    TargetInmates = true,
+    TargetGuards = true,
+    TargetCriminals = true,
+    TeamCheck = true,
+    WallCheck = true
+}
+
+-- Создание FOV круга
+local FovCircle = Drawing.new("Circle")
+FovCircle.Visible = true
+FovCircle.Thickness = 1
+FovCircle.Color = Color3.fromRGB(255, 255, 255)
+FovCircle.Filled = false
+FovCircle.Transparency = 1
+
+-- Функция проверки стен
+local function isVisible(targetPart)
+    local origin = Camera.CFrame.Position
+    local direction = (targetPart.Position - origin).Unit * (targetPart.Position - origin).Magnitude
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {LocalPlayer.Character, targetPart.Parent}
+    raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+    
+    local result = workspace:Raycast(origin, direction, raycastParams)
+    return result == nil -- Если луч ни обо что не ударился, значит цель видна
+end
+
+-- Функция поиска ближайшей цели
+local function getClosestTarget()
+    local closestTarget = nil
+    local maxDistance = Settings.FovRadius * 5 -- Множитель для сопоставления радиуса круга
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") then
+            
+            -- Dead Check (Проверка на смерть)
+            if player.Character.Humanoid.Health <= 0 then continue end
+
+            -- Team Check (Фильтр команд)
+            local team = player.Team.Name
+            if team == "Inmates" and not Settings.TargetInmates then continue end
+            if team == "Guards" and not Settings.TargetGuards then continue end
+            if team == "Criminals" and not Settings.TargetCriminals then continue end
+
+            -- Wall Check (Проверка видимости)
+            if Settings.WallCheck and not isVisible(player.Character.Head) then continue end
+
+            -- Проверка FOV
+            local screenPos, onScreen = Camera:WorldToViewportPoint(player.Character.Head.Position)
+            if onScreen then
+                local mousePos = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+                local distance = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
+                
+                if distance <= Settings.FovRadius * 5 then -- Привязка к радиусу слайдера
+                    closestTarget = player.Character.Head
+                end
+            end
+        end
+    end
+    return closestTarget
+end
+
+-- Обновление логики каждый кадр
+RunService.RenderStepped:Connect(function()
+    -- Центрируем и обновляем FOV круг
+    FovCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+    FovCircle.Radius = Settings.FovRadius * 5
+    FovCircle.Visible = Settings.AimbotEnabled
+
+    if Settings.AimbotEnabled then
+        local target = getClosestTarget()
+        if target then
+            -- Наведение камеры на цель (Аимбот)
+            Camera.CFrame = CFrame.new(Camera.CFrame.Position, target.Position)
+        end
+    end
+end)
+
+-- ТВОИ ЭЛЕМЕНТЫ ИНТЕРФЕЙСА (Интеграция):
+
+MainSection:Toggle({
+    Name = "Аимботек",
+    Flag = "LegitEnabled",
+    Default = true,
+    Callback = function(Value)
+        Settings.AimbotEnabled = Value
+    end
+})
+
+MainSection:Slider({
+    Name = "Фов круг",
+    Flag = "SpeedSlider",
+    Min = 1,
+    Max = 100,
+    Default = 16,
+    Suffix = " size",
+    Callback = function(Value)
+        Settings.FovRadius = Value
+    end
+})
+
+-- Добавь эти переключатели команд для полноценной работы:
+
+MainSection:Toggle({
+    Name = "аимбот на заключённых",
+    Default = true,
+    Callback = function(v) Settings.TargetInmates = v end
+})
+
+MainSection:Toggle({
+    Name = "Аимбот на охранников",
+    Default = true,
+    Callback = function(v) Settings.TargetGuards = v end
+})
+
+MainSection:Toggle({
+    Name = "Аимбот на криминал",
+    Default = true,
+    Callback = function(v) Settings.TargetCriminals = v end
+})
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Таблица для хранения значений из UI
+local HitboxSettings = {
+    Enabled = true,
+    Size = 10,
+    Transparency = 0.5,
+    TargetInmates = true,
+    TargetGuards = true,
+    TargetCriminals = true
+}
+
+-- ОСНОВНОЙ ЦИКЛ (вставлять в начало или конец скрипта)
+RunService.RenderStepped:Connect(function()
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
+            local head = player.Character.Head
+            local team = player.Team and player.Team.Name or ""
+
+            -- Проверка фильтров команд
+            local isTarget = false
+            if team == "Inmates" and HitboxSettings.TargetInmates then isTarget = true end
+            if team == "Guards" and HitboxSettings.TargetGuards then isTarget = true end
+            if team == "Criminals" and HitboxSettings.TargetCriminals then isTarget = true end
+
+            if HitboxSettings.Enabled and isTarget then
+                -- Применяем расширение
+                head.Size = Vector3.new(HitboxSettings.Size, HitboxSettings.Size, HitboxSettings.Size)
+                head.Transparency = HitboxSettings.Transparency
+                head.CanCollide = false
+                head.Massless = true
+            else
+                -- Возврат к стандарту, если выключено или команда не в фильтре
+                if head.Size.X ~= 2 then
+                    head.Size = Vector3.new(2, 1, 1)
+                    head.Transparency = 0
+                    head.CanCollide = true
+                end
+            end
+        end
+    end
+end)
+
+-- ИНТЕРФЕЙС (Твои слайдеры и тогглы)
+ -- Название раздела зависит от твоей либы
+
+MainSection:Toggle({
+    Name = "Включить Хитбоксы",
+    Flag = "HitboxEnabled",
+    Default = true,
+    Callback = function(Value)
+        HitboxSettings.Enabled = Value
+    end
+})
+
+MainSection:Slider({
+    Name = "Размер Хитбокса",
+    Flag = "HitboxSize",
+    Min = 2,
+    Max = 30,
+    Default = 10,
+    Suffix = " studs",
+    Callback = function(Value)
+        HitboxSettings.Size = Value
+    end
+})
+
+MainSection:Slider({
+    Name = "Прозрачность",
+    Flag = "HitboxTransp",
+    Min = 0,
+    Max = 1,
+    Default = 0.5,
+    Decimal = 0.1, -- Если либа поддерживает дробные числа
+    Callback = function(Value)
+        HitboxSettings.Transparency = Value
+    end
+})
+
+-- Фильтры команд
+MainSection:Toggle({
+    Name = "Бить Заключенных",
+    Flag = "TargetInmates",
+    Default = true,
+    Callback = function(Value)
+        HitboxSettings.TargetInmates = Value
+    end
+})
+
+MainSection:Toggle({
+    Name = "Бить Охрану",
+    Flag = "TargetGuards",
+    Default = true,
+    Callback = function(Value)
+        HitboxSettings.TargetGuards = Value
+    end
+})
+
+MainSection:Toggle({
+    Name = "Бить Преступников",
+    Flag = "TargetCriminals",
+    Default = true,
+    Callback = function(Value)
+        HitboxSettings.TargetCriminals = Value
+    end
+})
+
+local LegitPage = Window:Page({Name = "ЕСП", Icon = "138827881557940"})
+local MainSection = LegitPage:Section({Name = "Main", Side = 1})
+
+
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local ESP_Enabled = false
+local ESP_Cache = {}
+
+-- Функция очистки
+
+local function ClearAllESP()
+    for _, data in pairs(ESP_Cache) do
+        if data.Conn then data.Conn:Disconnect() end
+        if data.Gui then data.Gui:Destroy() end
+    end
+    table.clear(ESP_Cache)
+end
+
+-- Функция отрисовки
+
+local function CreateESP(player)
+    if player == LocalPlayer then return end
+
+    local conn = RunService.RenderStepped:Connect(function()
+        if not ESP_Enabled then return end
+        
+        local char = player.Character
+        local head = char and char:FindFirstChild("Head")
+        local hum = char and char:FindFirstChild("Humanoid")
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+
+        -- Если персонаж умер или исчез, убираем GUI
+        if not head or not hum or not hrp or hum.Health <= 0 then 
+            if ESP_Cache[player] and ESP_Cache[player].Gui then
+                ESP_Cache[player].Gui:Destroy()
+                ESP_Cache[player].Gui = nil
+            end
+            return 
+        end
+
+        -- Создание GUI (BillboardGui)
+        if not ESP_Cache[player] or not ESP_Cache[player].Gui then
+            local bgui = Instance.new("BillboardGui")
+            bgui.Name = "ESP_UI"
+            bgui.Size = UDim2.new(4, 0, 1.5, 0)
+            bgui.AlwaysOnTop = true
+            bgui.MaxDistance = 1000 -- Дистанция отрисовки
+            bgui.Parent = head
+            
+            local label = Instance.new("TextLabel")
+            label.Size = UDim2.new(1, 0, 0.5, 0)
+            label.BackgroundTransparency = 1
+            label.TextStrokeTransparency = 0
+            label.Font = Enum.Font.SourceSansBold
+            label.TextSize = 14
+            label.Parent = bgui
+
+            local healthBar = Instance.new("Frame")
+            healthBar.Size = UDim2.new(1, 0, 0.1, 0)
+            healthBar.Position = UDim2.new(0, 0, 0.6, 0)
+            healthBar.BackgroundColor3 = Color3.new(0, 0, 0)
+            healthBar.BorderSizePixel = 1
+            healthBar.Parent = bgui
+
+            local fill = Instance.new("Frame")
+            fill.Size = UDim2.new(1, 0, 1, 0)
+            fill.BorderSizePixel = 0
+            fill.Parent = healthBar
+
+            ESP_Cache[player] = {Gui = bgui, Conn = conn, Label = label, Fill = fill}
+        end
+
+        -- ЦВЕТОВАЯ СХЕМА ПО КОМАНДАМ
+        local color = Color3.new(1, 1, 1) -- Белый (если нет команды)
+        local teamName = player.Team and player.Team.Name or ""
+
+        if teamName == "Criminals" then
+            color = Color3.fromRGB(255, 0, 0)    -- КРАСНЫЙ
+        elseif teamName == "Inmates" then
+            color = Color3.fromRGB(255, 255, 0)  -- ЖЕЛТЫЙ
+        elseif teamName == "Guards" then
+            color = Color3.fromRGB(0, 170, 255)  -- СИНИЙ
+        end
+
+        -- Обновление данных
+        local data = ESP_Cache[player]
+        if data then
+            data.Label.Text = player.Name .. " [" .. teamName .. "]"
+            data.Label.TextColor3 = color
+            data.Fill.BackgroundColor3 = color
+            -- Масштабирование полоски HP
+            data.Fill.Size = UDim2.new(math.clamp(hum.Health / hum.MaxHealth, 0, 1), 0, 1, 0)
+        end
+    end)
+
+    ESP_Cache[player] = {Conn = conn}
+end
+
+-- Инициализация
+
+local function Init()
+    for _, p in pairs(Players:GetPlayers()) do
+        task.spawn(function() CreateESP(p) end)
+    end
+    Players.PlayerAdded:Connect(function(p)
+        task.spawn(function() CreateESP(p) end)
+    end)
+end
+
+Init()
+
+-- Кнопка управления (для твоего UI)
+
+MainSection:Toggle({
+    Name = "Team ESP (Cri/Inm/Grd)",
+    Flag = "TeamESP_Toggle",
+    Default = false,
+    Callback = function(Value)
+        ESP_Enabled = Value
+        if not Value then
+            ClearAllESP()
+            -- Пересоздаем связи, чтобы не ломать скрипт при выключении
+            for _, p in pairs(Players:GetPlayers()) do
+                task.spawn(function() CreateESP(p) end)
+            end
+        end
+    end
+})
+
+Window:Category("Settings")
+local SettingsPage = Library:CreateSettingsPage(Window, KeybindList)
+Window:Init()
