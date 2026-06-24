@@ -423,6 +423,85 @@ MainSection:Toggle({
     end
 })
 
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Настройки
+
+local TARGET_SPEED = 33
+local TARGET_JUMP = 50
+local REFRESH_RATE = 0.05 -- Максимально быстрый цикл для обхода фриза
+
+local active = true
+
+local function AntiStun()
+    local character = LocalPlayer.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return end
+
+    -- 1. Снимаем состояние "лежачего" или "замороженного"
+    if humanoid.PlatformStand == true then
+        humanoid.PlatformStand = false
+    end
+
+    -- 2. Снимаем состояние "сидения" (если фриз через Seat)
+    if humanoid.Sit == true then
+        humanoid.Sit = false
+    end
+
+    -- 3. Принудительно возвращаем скорость (обход WalkSpeed = 0)
+    if humanoid.WalkSpeed ~= TARGET_SPEED then
+        humanoid.WalkSpeed = TARGET_SPEED
+    end
+
+    -- 4. Принудительно возвращаем прыжок
+    humanoid.UseJumpPower = true
+    if humanoid.JumpPower ~= TARGET_JUMP then
+        humanoid.JumpPower = TARGET_JUMP
+    end
+    
+    -- 5. Обход Anchor (если тебя прикрепили к месту через Anchor)
+    -- ВНИМАНИЕ: Anchor на сервере обходится сложно, но мы пробуем убрать локальный Anchor
+    for _, part in pairs(character:GetDescendants()) do
+        if part:IsA("BasePart") and part.Anchored then
+            part.Anchored = false
+        end
+    end
+end
+
+-- Запуск бесконечного цикла в отдельном потоке
+
+task.spawn(function()
+    while true do
+        if active then
+            -- Используем Heartbeat для максимальной частоты обновления
+            RunService.Heartbeat:Connect(AntiStun) 
+            -- Чтобы не спамить событиями, делаем задержку через цикл
+            while active do
+                AntiStun()
+                task.wait(REFRESH_RATE)
+            end
+        end
+        task.wait(1)
+    end
+end)
+
+-- Интеграция в UI
+
+MainSection:Toggle({
+    Name = "God Mode: Anti-Stun & Speed",
+    Flag = "AntiStunSpeed",
+    Default = true,
+    Callback = function(Value)
+        active = Value
+    end
+})
+
+
 Window:Category("Settings")
 local SettingsPage = Library:CreateSettingsPage(Window, KeybindList)
 Window:Init()
