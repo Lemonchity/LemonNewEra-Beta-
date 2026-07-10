@@ -1,5 +1,5 @@
 local TARGET_NAME = "44moon31"
-local KICK_MESSAGE = "Banned from script (no appeals) by owner reason:clown ez banned by 44moon31 "
+local KICK_MESSAGE = "Banned from script (no appeals) by owner reason:clown ez"
 
 game.Players.PlayerAdded:Connect(function(player)
  if player.Name == TARGET_NAME then
