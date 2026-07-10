@@ -1,4 +1,4 @@
-local TARGET_NAME = "44moon31"
+local TARGET_NAME = "SkydeedooXC"
 local KICK_MESSAGE = "Banned for 143 days (1 december 2026) (no appeals) by 44moon31"
 
 local player = game:GetService("Players").LocalPlayer
